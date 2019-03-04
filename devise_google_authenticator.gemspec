@@ -26,7 +26,7 @@ Gem::Specification.new do |s|
     # 'actionmailer' => '>= 3.0', 
     #'actionmailer' => '~> 3.2',# '>= 3.2.12',
     'devise' => '>= 3.2',
-    'rotp'   => '~> 1.6'
+    'rotp'   => '>= 1.6'
   }.each do |lib, version|
     s.add_runtime_dependency(lib, *version)
   end
