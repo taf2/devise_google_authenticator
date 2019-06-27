@@ -1,4 +1,4 @@
-class ActionController::IntegrationTest
+module IntegrationTestHelper
 
   def warden
     request.env['warden']
@@ -7,7 +7,6 @@ class ActionController::IntegrationTest
   def create_full_user
     @@user ||= begin
       user = User.create!(
-        :username              => 'usertest',
         :email                 => 'fulluser@test.com',
         :password              => '123456',
         :password_confirmation => '123456'

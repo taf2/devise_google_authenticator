@@ -2,6 +2,7 @@ require 'test_helper'
 require 'integration_tests_helper'
 
 class InvitationTest < ActionDispatch::IntegrationTest
+  include IntegrationTestHelper
   self.use_transactional_tests = false
 
   def teardown
@@ -9,7 +10,7 @@ class InvitationTest < ActionDispatch::IntegrationTest
     Timecop.return
   end
 
-  test 'register new user - confirm that we get a display qr page after registering' do
+  def test_register_new_user___confirm_that_we_get_a_display_qr_page_after_registering
     visit new_user_registration_path
     fill_in('user_email', :with => 'test@test.com')
     fill_in('user_password', :with => 'Password1')
@@ -23,7 +24,7 @@ class InvitationTest < ActionDispatch::IntegrationTest
     fill_in('user_gauth_token', :with => ROTP::TOTP.new(testuser.get_qr).at(Time.now))
     click_button 'Continue...'
 
-    assert_equal root_path, current_path
+    assert_equal root_path.to_s, current_path.to_s
   end
 
   test 'a new user should be able to sign in without using their token' do
@@ -37,7 +38,7 @@ class InvitationTest < ActionDispatch::IntegrationTest
     assert_equal root_path, current_path
   end
 
-  test 'a new user should be able to sign in and change their qr code to enabled' do
+  def test_a_new_user_should_be_able_to_sign_in_and_change_their_qr_code_to_enabled
     # sign_in_as_user
     create_full_user
     User.find_by_email("fulluser@test.com").update_attributes(:gauth_enabled => 0) # force this off - unsure why sometimes it flicks on possible race condition

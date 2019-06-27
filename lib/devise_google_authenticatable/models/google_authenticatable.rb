@@ -25,7 +25,7 @@ module Devise # :nodoc:
         end
 
         def assign_tmp
-          self.update_attributes(:gauth_tmp => ROTP::Base32.random_base32(32), :gauth_tmp_datetime => DateTime.now)
+          self.update_attributes(:gauth_tmp => ROTP::Base32.random(32), :gauth_tmp_datetime => DateTime.now)
           self.gauth_tmp
         end
 
@@ -36,10 +36,10 @@ module Devise # :nodoc:
           else
 
             valid_vals = []
-            valid_vals << ROTP::TOTP.new(self.get_qr).at(Time.now)
+            valid_vals << ROTP::TOTP.new(self.get_qr).at(Time.now).to_i
             (1..self.class.ga_timedrift).each do |cc|
-              valid_vals << ROTP::TOTP.new(self.get_qr).at(Time.now.ago(30*cc))
-              valid_vals << ROTP::TOTP.new(self.get_qr).at(Time.now.in(30*cc))
+              valid_vals << ROTP::TOTP.new(self.get_qr).at(Time.now.ago(30*cc)).to_i
+              valid_vals << ROTP::TOTP.new(self.get_qr).at(Time.now.in(30*cc)).to_i
             end
 
             if valid_vals.include?(token.to_i)
@@ -80,7 +80,7 @@ module Devise # :nodoc:
         private
 
         def assign_auth_secret
-          self.gauth_secret = ROTP::Base32.random_base32(64)
+          self.gauth_secret = ROTP::Base32.random(64)
         end
 
       end
